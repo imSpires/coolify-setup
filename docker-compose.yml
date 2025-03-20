@@ -1,0 +1,44 @@
+services:
+  filebrowser:
+    image: hurlenko/filebrowser
+    container_name: filebrowser
+    # set to nobody user for compat w/ wp container
+    user: '65534:65534'
+    ports:
+      - 127.0.0.1:6900:8080
+    volumes:
+      - /home/CHANGE_TO_USERNAME/sites:/data
+      - ./filebrowser/config:/config
+    environment:
+      - FB_BASEURL=/
+    restart: unless-stopped
+
+  whatsupdocker:
+    image: getwud/wud
+    container_name: wud
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 127.0.0.1:6901:3000
+
+  # kopia server is 6902
+
+  # watchtower:
+  #   image: containrrr/watchtower
+  #   container_name: watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   restart: unless-stopped
+  #   environment:
+  #     - WATCHTOWER_CLEANUP=true
+
+  # dozzle:
+  #   image: amir20/dozzle
+  #   container_name: dozzle
+  #   networks:
+  #     - CHANGE_TO_USERNAME
+  #   ports:
+  #     - 127.0.0.1:6905:8080
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   restart: unless-stopped
