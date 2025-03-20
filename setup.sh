@@ -152,11 +152,11 @@ echo -e "${CYAN}Restarting SSH daemon...${ENDCOLOR}\n"
 systemctl restart sshd
 
 # add boost cli
-mkdir "/home/$username/.boost-bin"
-wget -O "/home/$username/.boost-bin/boost.tar.gz" "https://github.com/BOOST-Creative/boost-server-cli/releases/download/v0.0.5/boost-server-cli_0.0.5_linux_$ARCHITECTURE.tar.gz"
-tar -zxvf "/home/$username/.boost-bin/boost.tar.gz" -C "/home/$username/.boost-bin" boost
-rm "/home/$username/.boost-bin/boost.tar.gz"
-chown -R "$username:" "/home/$username/.boost-bin"
+mkdir "/home/$username/.local/bin"
+wget -O "/home/$username/.local/bin/boost.tar.gz" "https://github.com/BOOST-Creative/boost-server-cli/releases/download/v0.0.5/boost-server-cli_0.0.5_linux_$ARCHITECTURE.tar.gz"
+tar -zxvf "/home/$username/.local/bin/boost.tar.gz" -C "/home/$username/.local/bin" boost
+rm "/home/$username/.local/bin/boost.tar.gz"
+chown -R "$username:" "/home/$username/.local/bin"
 
 # clone wordpress repo and copy config
 mkdir -p "/etc/$username/mariadb"
@@ -181,14 +181,6 @@ cp .zshrc "/home/$username/.zshrc"
 
 # change shell to zsh
 chsh -s /bin/zsh "$username"
-
-# aliases / .bashrc stuff
-{
-  echo 'alias ctop="docker run --rm -ti --volume /var/run/docker.sock:/var/run/docker.sock:ro quay.io/vektorlab/ctop:latest"'
-  echo 'echo -e "\nFile Browser: \e[34mhttp://localhost:6900\n\e[0mKopia: \e[34mhttp://localhost:6901\e[0m (kopia:'"$KOPIA_PASSWORD"')\nWUD: \e[34mhttp://localhost:6902\n\n\e[0mRun ctop to manage containers and view metrics.\n"'
-  echo 'type ~/firewall.sh &>/dev/null && ./firewall.sh'
-  echo 'export PATH="~/.boost-bin:$PATH"'
-} >>"/home/$username/.bashrc"
 
 # lazyvim
 mv ~/.config/nvim{,.bak}

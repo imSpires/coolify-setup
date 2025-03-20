@@ -100,10 +100,15 @@ alias dcl="docker-compose logs -f -n 30"
 alias dce="docker-compose exec"
 # alias lg="lazygit"
 alias ls="eza --icons=always"
+alias bat="batcat"
 alias cat="bat"
 # alias b="yazi"
 alias tree="ls --tree"
 alias l="ls -lha"
+alias ctop="docker run --rm -ti --volume /var/run/docker.sock:/var/run/docker.sock:ro quay.io/vektorlab/ctop:latest"
+
+# Add local bin to PATH
+export PATH="$HOME/.local/bin:$PATH"
 
 # Shell integrations
 eval "$(fzf --zsh)"
@@ -111,3 +116,9 @@ eval "$(zoxide init --cmd cd zsh)"
 
 # Initialize Starship
 eval "$(starship init zsh)"
+
+# Local services information
+echo -e "\nFile Browser: \e[34mhttp://localhost:6900\n\e[0mKopia: \e[34mhttp://localhost:6901\e[0m (kopia:$KOPIA_PASSWORD)\nWUD: \e[34mhttp://localhost:6902\n\n\e[0mRun ctop to manage containers and view metrics.\n"
+
+# Run firewall script if it exists
+type ~/firewall.sh &>/dev/null && ~/firewall.sh
