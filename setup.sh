@@ -104,6 +104,7 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
 echo -e "${CYAN}Setting up docker containers...${ENDCOLOR}"
 
 # copy files
+mkdir -p "/home/$username/server"
 cp /tmp/cs/docker-compose.yml "/home/$username/server/docker-compose.yml"
 cp /tmp/cs/firewall.sh "/home/$username/firewall.sh"
 sed -i "s/REPLACE_ME/$ssh_port/" "/home/$username/firewall.sh"
