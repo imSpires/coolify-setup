@@ -154,7 +154,7 @@ echo -e "${CYAN}Restarting SSH daemon...${ENDCOLOR}\n"
 systemctl restart sshd
 
 # add boost cli
-mkdir "/home/$username/.local/bin"
+mkdir -p "/home/$username/.local/bin"
 wget -O "/home/$username/.local/bin/boost.tar.gz" "https://github.com/BOOST-Creative/boost-server-cli/releases/download/v0.0.5/boost-server-cli_0.0.5_linux_$ARCHITECTURE.tar.gz"
 tar -zxvf "/home/$username/.local/bin/boost.tar.gz" -C "/home/$username/.local/bin" boost
 rm "/home/$username/.local/bin/boost.tar.gz"
