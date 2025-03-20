@@ -104,8 +104,8 @@ curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
 echo -e "${CYAN}Setting up docker containers...${ENDCOLOR}"
 
 # copy files
-cp docker-compose.yml "/home/$username/server/docker-compose.yml"
-cp firewall.sh "/home/$username/firewall.sh"
+cp /tmp/cs/docker-compose.yml "/home/$username/server/docker-compose.yml"
+cp /tmp/cs/firewall.sh "/home/$username/firewall.sh"
 sed -i "s/REPLACE_ME/$ssh_port/" "/home/$username/firewall.sh"
 
 # replace docker compose file with user input, and start
@@ -128,7 +128,7 @@ usermod -aG docker "$username"
 htpasswd -bc /root/kopiap.txt kopia "$KOPIA_PASSWORD" >/dev/null 2>&1
 
 # set up automated jobs with systemd
-cp ./systemd/* /etc/systemd/system
+cp /tmp/cs/systemd/* /etc/systemd/system
 sed -i "s/USERNAME/$username/" /etc/systemd/system/kopiaServer.service
 
 systemctl daemon-reload
@@ -178,7 +178,7 @@ while [[ ! $ssh_correct =~ ^[Yy]$ ]]; do
 done
 
 # copy zshrc
-cp .zshrc "/home/$username/.zshrc"
+cp /tmp/cs/.zshrc "/home/$username/.zshrc"
 
 # change shell to zsh
 chsh -s /bin/zsh "$username"
