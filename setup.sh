@@ -176,12 +176,8 @@ chsh -s /bin/zsh "$username"
 
 # aliases / .bashrc stuff
 {
-  echo 'alias dcu="docker compose up -d"'
-  echo 'alias dcd="docker compose down"'
-  echo 'alias dcu="docker compose up -d"'
-  echo 'alias dcr="docker compose restart"'
   echo 'alias ctop="docker run --rm -ti --volume /var/run/docker.sock:/var/run/docker.sock:ro quay.io/vektorlab/ctop:latest"'
-  echo 'echo -e "\nphpMyAdmin: \e[34mhttp://localhost:6902\n\e[0mFile Browser: \e[34mhttp://localhost:6903\n\e[0mKopia: \e[34mhttp://localhost:6904\e[0m (kopia:'"$KOPIA_PASSWORD"')\nDozzle: \e[34mhttp://localhost:6905\n\n\e[0mRun ctop to manage containers and view metrics.\n"'
+  echo 'echo -e "\nFile Browser: \e[34mhttp://localhost:6900\n\e[0mKopia: \e[34mhttp://localhost:6901\e[0m (kopia:'"$KOPIA_PASSWORD"')\nWUD: \e[34mhttp://localhost:6902\n\n\e[0mRun ctop to manage containers and view metrics.\n"'
   echo 'type ~/firewall.sh &>/dev/null && ./firewall.sh'
   echo 'export PATH="~/.boost-bin:$PATH"'
 } >>"/home/$username/.bashrc"
@@ -201,18 +197,10 @@ echo "Host $(hostname)"
 echo "    HostName $(curl -s -4 ifconfig.me)"
 echo "    Port $ssh_port"
 echo "    User $username"
+echo "    LocalForward 6901 127.0.0.1:6901"
 echo "    LocalForward 6902 127.0.0.1:6902"
 echo "    LocalForward 6903 127.0.0.1:6903"
-echo "    LocalForward 6904 127.0.0.1:6904"
-echo "    LocalForward 6905 127.0.0.1:6905"
 echo "    ServerAliveInterval 60"
 echo -e "    ServerAliveCountMax 10\n"
 
-# clean up script
-rm ./setup.sh
-
-# change timezone (works on debian / ubuntu / fedora)
-read -r -p "$(echo -e "${YELLOW}Do you want to reboot now (y/n)?${ENDCOLOR} ")" yn
-if [[ $yn =~ ^[Yy]$ ]]; then
-  reboot
-fi
+reboot

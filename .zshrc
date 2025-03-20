@@ -6,11 +6,6 @@ if ! command -v starship &> /dev/null; then
   curl -sS https://starship.rs/install.sh | sh
 fi
 
-# if [[ -f "/opt/homebrew/bin/brew" ]] then
-  # If you're using macOS, you'll want this enabled
-#   eval "$(/opt/homebrew/bin/brew shellenv)"
-# fi
-
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 # Download Zinit, if it's not there yet
@@ -74,14 +69,14 @@ else
 fi
 
 # shell wrapper that provides the ability to change the current working directory when exiting Yazi
-function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
-}
+# function y() {
+# 	local tmp="$(mktemp -t "yazi-cwd.xxxxxx")" cwd
+# 	yazi "$@" --cwd-file="$tmp"
+# 	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$pwd" ]; then
+# 		builtin cd -- "$cwd"
+# 	fi
+# 	rm -f -- "$tmp"
+# }
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -91,7 +86,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # gemini (if we want aichat)
-export GEMINI_API_KEY=""
+# export GEMINI_API_KEY=""
 
 # Aliases
 alias c='clear'
