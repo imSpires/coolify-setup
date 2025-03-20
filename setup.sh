@@ -91,7 +91,7 @@ rm Meslo.zip
 # update system - apt update runs in docker script
 apt update
 apt upgrade -y
-apt install kopia unattended-upgrades zsh neovim fzf bat eza ncdu -y
+apt install kopia unattended-upgrades zsh neovim fzf bat eza ncdu apache2-utils -y
 
 # unattended-upgrades
 echo -e "${CYAN}Setting up unattended-upgrades...${ENDCOLOR}"
