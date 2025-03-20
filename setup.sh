@@ -89,6 +89,7 @@ unzip Meslo.zip -d /usr/share/fonts/truetype/
 rm Meslo.zip
 
 # update system - apt update runs in docker script
+apt update
 apt upgrade -y
 apt install kopia unattended-upgrades zsh neovim fzf bat eza ncdu -y
 
