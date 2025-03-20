@@ -158,6 +158,14 @@ tar -zxvf "/home/$username/.boost-bin/boost.tar.gz" -C "/home/$username/.boost-b
 rm "/home/$username/.boost-bin/boost.tar.gz"
 chown -R "$username:" "/home/$username/.boost-bin"
 
+# clone wordpress repo and copy config
+mkdir -p "/etc/$username/mariadb"
+mkdir -p "/etc/$username/valkey"
+git clone https://github.com/BOOST-Creative/coolify-wordpress-8 "/tmp/wp"
+cp "/tmp/wp/config/valkey.conf" "/etc/$username/valkey/valkey.conf"
+cp "/tmp/wp/config/my.cnf" "/etc/$username/mariadb/my.cnf"
+cp "/tmp/wp/config/db-entrypoint.sh" "/etc/$username/mariadb/db-entrypoint.sh"
+
 # verify ssh key is correct
 cat "/home/$username/.ssh/authorized_keys"
 read -r -p "$(echo -e "\nIs the above SSH key(s) correct (y/n)? ")" ssh_correct
