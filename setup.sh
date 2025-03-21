@@ -185,7 +185,7 @@ cp /tmp/cs/.zshrc "/home/$username/.zshrc"
 chsh -s /bin/zsh "$username"
 
 # lazyvim
-mv ~/.config/nvim{,.bak}
+# mv ~/.config/nvim{,.bak}
 git clone https://github.com/LazyVim/starter ~/.config/nvim --depth 1
 
 # Success Message
