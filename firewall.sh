@@ -8,26 +8,45 @@ SSH_PORT=REPLACE_ME
 
 read -p "$(echo -e "\e[32mWelcome! The last thing we need to do is set up and save firewall rules. Do you want to do this now (y/n)?\e[0m ")" yn
 
-if [[ ! $yn =~ ^[Yy]$ ]]
-then
+if [[ ! $yn =~ ^[Yy]$ ]]; then
   echo "Goodbye. This script will run again next time you log in."
   exit
 fi
 
-# allow return traffic for outgoing connections initiated by the server itself
-sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-# allow loopback
-sudo iptables -A INPUT -i lo -j ACCEPT
-# allow http, https, ssh
-sudo iptables -A INPUT -p tcp -m multiport --dports 80,443,$SSH_PORT -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-# set input policy to drop everything else
-sudo iptables --policy INPUT DROP
+# Install UFW if not already installed
+# sudo apt update
+# sudo apt install ufw -y
 
-sudo apt install iptables-persistent -y
+# Default deny incoming and allow outgoing
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
 
-# don't need to run this as it runs automatically on install
-# sudo netfilter-persistent save
+# Allow all traffic on localhost interface
+# sudo ufw allow from 127.0.0.1 to 127.0.0.1 comment 'Allow all localhost traffic'
 
-echo -e "\n\e[32mFirewall configured 👍. If you didn't save rules, please run sudo netfilter-persistent save :)\e[0m\n"
+# Allow SSH, HTTP, and HTTPS
+sudo ufw allow $SSH_PORT/tcp comment 'SSH'
+sudo ufw allow 80/tcp comment 'HTTP'
+sudo ufw allow 443/tcp comment 'HTTPS'
 
-rm ~/firewall.sh
+# Rate limiting for SSH to prevent brute force attacks
+sudo ufw limit $SSH_PORT/tcp comment 'Rate limit SSH'
+
+# Protect against port scanning
+sudo ufw deny out to any port 111 comment 'Block outgoing portmapper'
+sudo ufw deny out to any port 135 comment 'Block outgoing RPC'
+
+# Log all denied packets for troubleshooting
+# sudo ufw logging on
+
+# Enable UFW
+sudo ufw enable
+
+# Install ufw-docker
+sudo wget -O /usr/local/bin/ufw-docker \
+  https://github.com/chaifeng/ufw-docker/raw/master/ufw-docker
+sudo chmod +x /usr/local/bin/ufw-docker
+sudo ufw-docker install
+sudo systemctl restart ufw
+
+echo -e "\n\e[32mFirewall configured with UFW 👍. Your allowed ports are: $SSH_PORT (SSH), 80 (HTTP), and 443 (HTTPS).\e[0m\n"

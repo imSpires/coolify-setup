@@ -91,11 +91,14 @@ rm Meslo.zip
 # update system - apt update runs in docker script
 apt update
 apt upgrade -y
-apt install kopia unattended-upgrades zsh fzf bat eza zoxide ncdu apache2-utils -y
+apt install kopia unattended-upgrades zsh fzf bat eza ncdu apache2-utils clang ufw -y
 
 # neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+
+# zoxide
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 # unattended-upgrades
 echo -e "${CYAN}Setting up unattended-upgrades...${ENDCOLOR}"
@@ -190,7 +193,7 @@ chsh -s /bin/zsh "$username"
 
 # lazyvim
 # mv ~/.config/nvim{,.bak}
-git clone https://github.com/LazyVim/starter ~/.config/nvim --depth 1
+git clone https://github.com/LazyVim/starter "/home/$username/.config/nvim" --depth 1
 
 # aliases / .bashrc stuff
 {
