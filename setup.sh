@@ -155,6 +155,8 @@ echo -e "\n${CYAN}Updating SSH config...${ENDCOLOR}"
   echo "PubkeyAuthentication yes"
   echo "PasswordAuthentication no"
   echo "X11Forwarding no"
+  echo "PubkeyAcceptedAlgorithms +ssh-ed25519"
+  echo "HostKeyAlgorithms +ssh-ed25519"
 } >>/etc/ssh/sshd_config
 
 echo -e "${CYAN}Restarting SSH daemon...${ENDCOLOR}\n"
@@ -217,6 +219,7 @@ echo "    User $username"
 echo "    LocalForward 6901 127.0.0.1:6901"
 echo "    LocalForward 6902 127.0.0.1:6902"
 echo "    LocalForward 6903 127.0.0.1:6903"
+echo "    LocalForward 8000 127.0.0.1:8000"
 echo "    ServerAliveInterval 60"
 echo -e "    ServerAliveCountMax 10\n"
 
