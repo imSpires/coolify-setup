@@ -117,8 +117,5 @@ eval "$(zoxide init --cmd cd zsh)"
 # Initialize Starship
 eval "$(starship init zsh)"
 
-# Local services information
-echo -e "\nFile Browser: \e[34mhttp://localhost:6900\n\e[0mKopia: \e[34mhttp://localhost:6901\e[0m (kopia:$KOPIA_PASSWORD)\nWUD: \e[34mhttp://localhost:6902\n\n\e[0mRun ctop to manage containers and view metrics.\n"
-
 # Run firewall script if it exists
 type ~/firewall.sh &>/dev/null && ~/firewall.sh

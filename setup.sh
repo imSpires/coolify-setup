@@ -188,6 +188,11 @@ chsh -s /bin/zsh "$username"
 # mv ~/.config/nvim{,.bak}
 git clone https://github.com/LazyVim/starter ~/.config/nvim --depth 1
 
+# aliases / .bashrc stuff
+{
+  echo 'echo -e "\nFile Browser: \e[34mhttp://localhost:6900\n\e[0mKopia: \e[34mhttp://localhost:6901\e[0m (kopia:'"$KOPIA_PASSWORD"')\nWUD: \e[34mhttp://localhost:6902\n\n\e[0mRun ctop to manage containers and view metrics.\n"'
+} >>"/home/$username/.zshrc"
+
 # permissions again for good measure
 chown -R "$username": "/home/$username"
 
