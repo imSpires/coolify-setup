@@ -91,7 +91,7 @@ rm Meslo.zip
 # update system - apt update runs in docker script
 apt update
 apt upgrade -y
-apt install kopia unattended-upgrades zsh neovim fzf bat eza ncdu apache2-utils -y
+apt install kopia unattended-upgrades zsh neovim fzf bat eza zoxide ncdu apache2-utils -y
 
 # unattended-upgrades
 echo -e "${CYAN}Setting up unattended-upgrades...${ENDCOLOR}"
@@ -187,6 +187,9 @@ chsh -s /bin/zsh "$username"
 # lazyvim
 # mv ~/.config/nvim{,.bak}
 git clone https://github.com/LazyVim/starter ~/.config/nvim --depth 1
+
+# permissions again for good measure
+chown -R "$username": "/home/$username"
 
 # Success Message
 echo -e "\n${GREEN}Setup complete 👍. Please log back in as $username on port $ssh_port.${ENDCOLOR}"
