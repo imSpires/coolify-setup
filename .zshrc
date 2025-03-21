@@ -110,6 +110,9 @@ alias ctop="docker run --rm -ti --volume /var/run/docker.sock:/var/run/docker.so
 # Add local bin to PATH
 export PATH="$HOME/.local/bin:$PATH"
 
+# Add neovim to PATH
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
@@ -119,3 +122,4 @@ eval "$(starship init zsh)"
 
 # Run firewall script if it exists
 type ~/firewall.sh &>/dev/null && ~/firewall.sh
+

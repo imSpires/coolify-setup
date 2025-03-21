@@ -91,7 +91,11 @@ rm Meslo.zip
 # update system - apt update runs in docker script
 apt update
 apt upgrade -y
-apt install kopia unattended-upgrades zsh neovim fzf bat eza zoxide ncdu apache2-utils -y
+apt install kopia unattended-upgrades zsh fzf bat eza zoxide ncdu apache2-utils -y
+
+# neovim
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 
 # unattended-upgrades
 echo -e "${CYAN}Setting up unattended-upgrades...${ENDCOLOR}"
