@@ -2,9 +2,9 @@
 # confirmations, etc.) must go above this block; everything else may go below.
 
 # Install starship if it's not installed
-if ! command -v starship &> /dev/null; then
-  curl -sS https://starship.rs/install.sh | sh
-fi
+# if ! command -v starship &> /dev/null; then
+#   curl -sS https://starship.rs/install.sh | sh
+# fi
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"

@@ -62,7 +62,7 @@ else
   echo "$sshkey" >>"/home/$username/.ssh/authorized_keys"
 fi
 # fix permissions
-chown -R "$username": "/home/$username/.ssh"
+# chown -R "$username": "/home/$username/.ssh"
 
 # add / update packages
 echo -e "${CYAN}Updating system & packages...${ENDCOLOR}"
@@ -100,10 +100,6 @@ sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 # zoxide
 curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
-# unattended-upgrades
-echo -e "${CYAN}Setting up unattended-upgrades...${ENDCOLOR}"
-dpkg-reconfigure --priority=low unattended-upgrades
-
 # install coolify
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
 
@@ -124,10 +120,7 @@ sed -i "s/CHANGE_TO_USERNAME/$username/" "/home/$username/server/docker-compose.
 docker compose -f "/home/$username/server/docker-compose.yml" up -d
 
 # fix permissions
-chown "$username": "/home/$username/sites" "/home/$username/server/docker-compose.yml" "/home/$username/firewall.sh"
-
-# nobody user bc that's what wp container uses
-chown -R nobody:nogroup "/home/$username/server/filebrowser"
+# chown "$username": "/home/$username/sites" "/home/$username/server/docker-compose.yml" "/home/$username/firewall.sh"
 
 # add user to docker users
 usermod -aG docker "$username"
@@ -167,15 +160,44 @@ mkdir -p "/home/$username/.local/bin"
 wget -O "/home/$username/.local/bin/boost.tar.gz" "https://github.com/BOOST-Creative/boost-server-cli/releases/download/v0.0.5/boost-server-cli_0.0.5_linux_$ARCHITECTURE.tar.gz"
 tar -zxvf "/home/$username/.local/bin/boost.tar.gz" -C "/home/$username/.local/bin" boost
 rm "/home/$username/.local/bin/boost.tar.gz"
-chown -R "$username:" "/home/$username/.local/bin"
+# chown -R "$username:" "/home/$username/.local/bin"
 
 # clone wordpress repo and copy config
 mkdir -p "/etc/$username/mariadb"
 mkdir -p "/etc/$username/valkey"
-git clone https://github.com/BOOST-Creative/coolify-wordpress-8 "/tmp/wp"
+git clone https://github.com/BOOST-Creative/coolify-wordpress-8 "/tmp/wp" --depth=1
 cp "/tmp/wp/config/valkey.conf" "/etc/$username/valkey/valkey.conf"
 cp "/tmp/wp/config/my.cnf" "/etc/$username/mariadb/my.cnf"
 cp "/tmp/wp/config/db-entrypoint.sh" "/etc/$username/mariadb/db-entrypoint.sh"
+chmod +x "/etc/$username/mariadb/db-entrypoint.sh"
+
+# configure zsh
+cp /tmp/cs/.zshrc "/home/$username/.zshrc"
+cp /tmp/cs/.zshrc_root "/root/.zshrc"
+chsh -s /bin/zsh root
+chsh -s /bin/zsh "$username"
+
+# install starship
+curl -sS https://starship.rs/install.sh | sh -s -- -y
+
+# lazyvim
+# mv ~/.config/nvim{,.bak}
+git clone https://github.com/LazyVim/starter "/home/$username/.config/nvim" --depth=1
+
+# Add welcome message to zshrc
+{
+  echo 'echo -e "\nFile Browser: \e[34mhttp://localhost:6900\n\e[0mKopia: \e[34mhttp://localhost:6901\e[0m (kopia:'"$KOPIA_PASSWORD"')\n"'
+} >>"/home/$username/.zshrc"
+
+# permissions
+chown -R "$username": "/home/$username"
+# filebrowser uses nobody user bc that's what the wp container uses
+mkdir -p "/home/$username/server/filebrowser"
+chown -R nobody:nogroup "/home/$username/server/filebrowser"
+
+# unattended-upgrades
+echo -e "${CYAN}Setting up unattended-upgrades...${ENDCOLOR}"
+dpkg-reconfigure --priority=low unattended-upgrades
 
 # verify ssh key is correct
 cat "/home/$username/.ssh/authorized_keys"
@@ -186,24 +208,6 @@ while [[ ! $ssh_correct =~ ^[Yy]$ ]]; do
   cat "/home/$username/.ssh/authorized_keys"
   read -r -p "$(echo -e "\nIs the above SSH key(s) correct (y/n)? ")" ssh_correct
 done
-
-# copy zshrc
-cp /tmp/cs/.zshrc "/home/$username/.zshrc"
-
-# change shell to zsh
-chsh -s /bin/zsh "$username"
-
-# lazyvim
-# mv ~/.config/nvim{,.bak}
-git clone https://github.com/LazyVim/starter "/home/$username/.config/nvim" --depth 1
-
-# aliases / .bashrc stuff
-{
-  echo 'echo -e "\nFile Browser: \e[34mhttp://localhost:6900\n\e[0mKopia: \e[34mhttp://localhost:6901\e[0m (kopia:'"$KOPIA_PASSWORD"')\nWUD: \e[34mhttp://localhost:6902\n\n\e[0mRun ctop to manage containers and view metrics.\n"'
-} >>"/home/$username/.zshrc"
-
-# permissions again for good measure
-chown -R "$username": "/home/$username"
 
 # Success Message
 echo -e "\n${GREEN}Setup complete 👍. Please log back in as $username on port $ssh_port.${ENDCOLOR}"
