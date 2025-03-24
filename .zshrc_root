@@ -26,6 +26,9 @@ else
   export EDITOR='nvim'
 fi
 
+# Add neovim to PATH
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+
 # Aliases
 alias c='clear'
 alias vim="nvim"

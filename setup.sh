@@ -167,13 +167,23 @@ rm "/home/$username/.local/bin/boost.tar.gz"
 sudo -u "$username" curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sudo -u "$username" bash
 
 # clone wordpress repo and copy config
-mkdir -p "/etc/coolify-setup/username/mariadb"
-mkdir -p "/etc/coolify-setup/username/valkey"
+mkdir -p "/etc/coolify-setup/mariadb"
+mkdir -p "/etc/coolify-setup/valkey"
 git clone https://github.com/BOOST-Creative/coolify-wordpress-8 "/tmp/wp" --depth=1
-cp "/tmp/wp/config/valkey.conf" "/etc/coolify-setup/username/valkey/valkey.conf"
-cp "/tmp/wp/config/my.cnf" "/etc/coolify-setup/username/mariadb/my.cnf"
-cp "/tmp/wp/config/db-entrypoint.sh" "/etc/coolify-setup/username/mariadb/db-entrypoint.sh"
-chmod +x "/etc/coolify-setup/username/mariadb/db-entrypoint.sh"
+cp "/tmp/wp/config/valkey.conf" "/etc/coolify-setup/valkey/valkey.conf"
+cp "/tmp/wp/config/my.cnf" "/etc/coolify-setup/mariadb/my.cnf"
+cp "/tmp/wp/config/db-entrypoint.sh" "/etc/coolify-setup/mariadb/db-entrypoint.sh"
+chmod +x "/etc/coolify-setup/mariadb/db-entrypoint.sh"
+
+# proxy config
+mkdir -p "/etc/coolify-setup/proxy"
+mkdir -p /data/coolify/proxy/caddy
+cp "/tmp/cs/proxy/Caddyfile" "/etc/coolify-setup/proxy/Caddyfile"
+cp "/tmp/cs/proxy/dockerfile" "/etc/coolify-setup/proxy/dockerfile"
+cp "/tmp/cs/proxy/acquis.yaml" "/etc/coolify-setup/proxy/acquis.yaml"
+echo "CROWDSEC_API_KEY=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >"/etc/coolify-setup/proxy/.env"
+ln -s "/etc/coolify-setup/proxy/dockerfile" "/data/coolify/proxy/caddy/dockerfile"
+ln -s "/etc/coolify-setup/proxy/.env" "/data/coolify/proxy/caddy/.env"
 
 # configure zsh
 cp /tmp/cs/.zshrc "/home/$username/.zshrc"

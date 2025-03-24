@@ -1,0 +1,59 @@
+services:
+  caddy:
+    container_name: coolify-proxy
+    # image: 'hgdboost/caddy-docker-proxy'
+    build:
+      context: ./
+      target: caddy
+    restart: unless-stopped
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      - CADDY_DOCKER_POLLING_INTERVAL=45s
+      - CADDY_DOCKER_CADDYFILE_PATH=/etc/caddy/Caddyfile
+      - CROWDSEC_API_KEY=${CROWDSEC_API_KEY}
+    networks:
+      - coolify
+      - crowdsec
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    labels:
+      - coolify.managed=true
+      - coolify.proxy=true
+      # - caddy.log.output=file /var/log/caddy/access.log
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      - '/data/coolify/proxy/caddy/dynamic:/dynamic'
+      - '/data/coolify/proxy/caddy/config:/config'
+      - '/data/coolify/proxy/caddy/data:/data'
+      - /etc/coolify-setup/proxy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy-logs:/var/log/caddy
+
+  crowdsec:
+    image: docker.io/crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    environment:
+      - GID=1000
+      - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
+      - BOUNCER_KEY_CADDY=${CROWDSEC_API_KEY}
+    volumes:
+      - crowdsec-db:/var/lib/crowdsec/data/
+      - caddy-logs:/var/log/caddy:ro
+      - /etc/coolify-setup/proxy/acquis.yaml:/etc/crowdsec/acquis.yaml
+    networks:
+      crowdsec:
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+
+volumes:
+  crowdsec-db:
+  caddy-logs:
+
+networks:
+  coolify:
+    external: true
+  crowdsec:
+    driver: bridge
