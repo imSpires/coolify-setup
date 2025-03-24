@@ -13,7 +13,7 @@ apt update && apt install git unzip -y && git clone https://github.com/BOOST-Cre
 
 Create your account, then go to Servers > localhost > Configuration and change the port to your chosen port. This is a bit finicky. If the SSH settings show errors, try restarting the server. You may need to add the Coolify public key to `/root/.ssh/authorized_keys`. Or try `sudo systemctl restart docker`.
 
-In the Proxy tab, stop the proxy and switch to use Caddy. You may need to `sudo systemctl restart docker`.
+In the Proxy tab, stop the proxy and switch to use Caddy. You may need to reboot the server to get it to stick.
 
 Then go to Settings > General and change the instance domain if you need to access it from outside the server.
 

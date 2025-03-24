@@ -77,6 +77,10 @@ sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.lis
 curl -s https://kopia.io/signing-key | gpg --dearmor -o /usr/share/keyrings/kopia-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/kopia-keyring.gpg] http://packages.kopia.io/apt/ stable main" | tee /etc/apt/sources.list.d/kopia.list
 
+# download fzf binary
+wget -O /tmp/fzf.tar.gz "https://github.com/junegunn/fzf/releases/download/v0.60.3/fzf-0.60.3-linux_amd64.tar.gz"
+tar -xzf /tmp/fzf.tar.gz -C /usr/bin/
+
 # yq for editing yml files
 # wget https://github.com/mikefarah/yq/releases/download/v4.41.1/yq_linux_${ARCHITECTURE}.tar.gz -O - |
 #   tar xz && mv yq_linux_${ARCHITECTURE} /usr/bin/yq
@@ -91,14 +95,11 @@ rm Meslo.zip
 # update system - apt update runs in docker script
 apt update
 apt upgrade -y
-apt install kopia unattended-upgrades zsh fzf bat eza ncdu apache2-utils clang ufw -y
+apt install kopia unattended-upgrades zsh bat eza ncdu apache2-utils clang ufw -y
 
 # neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-
-# zoxide
-curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 
 # install coolify
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | sudo bash
@@ -162,14 +163,17 @@ tar -zxvf "/home/$username/.local/bin/boost.tar.gz" -C "/home/$username/.local/b
 rm "/home/$username/.local/bin/boost.tar.gz"
 # chown -R "$username:" "/home/$username/.local/bin"
 
+# install zoxide
+sudo -u "$username" curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sudo -u "$username" bash
+
 # clone wordpress repo and copy config
-mkdir -p "/etc/$username/mariadb"
-mkdir -p "/etc/$username/valkey"
+mkdir -p "/etc/coolify-setup/username/mariadb"
+mkdir -p "/etc/coolify-setup/username/valkey"
 git clone https://github.com/BOOST-Creative/coolify-wordpress-8 "/tmp/wp" --depth=1
-cp "/tmp/wp/config/valkey.conf" "/etc/$username/valkey/valkey.conf"
-cp "/tmp/wp/config/my.cnf" "/etc/$username/mariadb/my.cnf"
-cp "/tmp/wp/config/db-entrypoint.sh" "/etc/$username/mariadb/db-entrypoint.sh"
-chmod +x "/etc/$username/mariadb/db-entrypoint.sh"
+cp "/tmp/wp/config/valkey.conf" "/etc/coolify-setup/username/valkey/valkey.conf"
+cp "/tmp/wp/config/my.cnf" "/etc/coolify-setup/username/mariadb/my.cnf"
+cp "/tmp/wp/config/db-entrypoint.sh" "/etc/coolify-setup/username/mariadb/db-entrypoint.sh"
+chmod +x "/etc/coolify-setup/username/mariadb/db-entrypoint.sh"
 
 # configure zsh
 cp /tmp/cs/.zshrc "/home/$username/.zshrc"
