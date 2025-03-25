@@ -179,11 +179,16 @@ chmod +x "/etc/coolify-setup/mariadb/db-entrypoint.sh"
 mkdir -p "/etc/coolify-setup/proxy"
 mkdir -p /data/coolify/proxy/caddy
 cp "/tmp/cs/proxy/Caddyfile" "/etc/coolify-setup/proxy/Caddyfile"
-cp "/tmp/cs/proxy/dockerfile" "/etc/coolify-setup/proxy/dockerfile"
+# cp "/tmp/cs/proxy/dockerfile" "/etc/coolify-setup/proxy/dockerfile"
 cp "/tmp/cs/proxy/acquis.yaml" "/etc/coolify-setup/proxy/acquis.yaml"
 echo "CROWDSEC_API_KEY=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >"/etc/coolify-setup/proxy/.env"
-ln -s "/etc/coolify-setup/proxy/dockerfile" "/data/coolify/proxy/caddy/dockerfile"
-ln -s "/etc/coolify-setup/proxy/.env" "/data/coolify/proxy/caddy/.env"
+# ln "/etc/coolify-setup/proxy/dockerfile" "/data/coolify/proxy/caddy/dockerfile"
+ln "/etc/coolify-setup/proxy/.env" "/data/coolify/proxy/caddy/.env"
+
+# switch proxy to caddy (this doesn't work during setup)
+# docker compose -f /data/coolify/proxy/docker-compose.yml stop
+# docker compose -f /data/coolify/proxy/docker-compose.yml rm -f
+# docker compose -f /data/coolify/proxy/caddy/docker-compose.yml up -d
 
 # configure zsh
 cp /tmp/cs/.zshrc "/home/$username/.zshrc"
@@ -242,3 +247,5 @@ echo "    ServerAliveInterval 60"
 echo -e "    ServerAliveCountMax 10\n"
 
 reboot
+
+# TODO: maybe disable userland-proxy in /etc/docker/daemon.json

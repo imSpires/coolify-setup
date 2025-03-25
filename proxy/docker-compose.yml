@@ -1,15 +1,15 @@
 services:
   caddy:
     container_name: coolify-proxy
-    # image: 'hgdboost/caddy-docker-proxy'
-    build:
-      context: ./
-      target: caddy
+    image: 'hgdboost/caddy-docker-proxy'
+    # build:
+    #   context: ./
+    #   target: caddy
     restart: unless-stopped
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     environment:
-      - CADDY_DOCKER_POLLING_INTERVAL=45s
+      - CADDY_DOCKER_POLLING_INTERVAL=30s
       - CADDY_DOCKER_CADDYFILE_PATH=/etc/caddy/Caddyfile
       - CROWDSEC_API_KEY=${CROWDSEC_API_KEY}
     networks:
@@ -34,9 +34,12 @@ services:
   crowdsec:
     image: docker.io/crowdsecurity/crowdsec:latest
     container_name: crowdsec
+    depends_on:
+      - caddy
     environment:
       - GID=1000
-      - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
+      # - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
+      - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors crowdsecurity/wordpress crowdsecurity/appsec-wordpress
       - BOUNCER_KEY_CADDY=${CROWDSEC_API_KEY}
     volumes:
       - crowdsec-db:/var/lib/crowdsec/data/

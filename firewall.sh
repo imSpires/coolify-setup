@@ -30,7 +30,7 @@ sudo ufw allow 80/tcp comment 'HTTP'
 sudo ufw allow 443/tcp comment 'HTTPS'
 
 # Rate limiting for SSH to prevent brute force attacks
-sudo ufw limit $SSH_PORT/tcp comment 'Rate limit SSH'
+# sudo ufw limit $SSH_PORT/tcp comment 'Rate limit SSH'
 
 # Protect against port scanning
 sudo ufw deny out to any port 111 comment 'Block outgoing portmapper'
@@ -49,6 +49,7 @@ sudo chmod +x /usr/local/bin/ufw-docker
 sudo ufw-docker install
 sudo ufw route allow proto tcp from any to any port 80
 sudo ufw route allow proto tcp from any to any port 443
+sudo ufw route allow proto tcp from any to any port "$SSH_PORT"
 sudo systemctl restart ufw
 
 echo -e "\n\e[32mFirewall configured with UFW 👍. Your allowed ports are: $SSH_PORT (SSH), 80 (HTTP), and 443 (HTTPS).\e[0m\n"

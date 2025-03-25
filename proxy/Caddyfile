@@ -1,14 +1,39 @@
 {
-    # debug
     crowdsec {
         api_url http://crowdsec:8080
         api_key {$CROWDSEC_API_KEY}
     }
-    ## SHOULDNT BE USED IN PRODUCTION
-    # auto_https off
-    #################################
-    log {
-        output file /var/log/caddy/access.log
+	log default {
+        include http.log.access
+		output file /var/log/caddy/access.log {
+            roll_size 10MB # Create new file when size exceeds 10MB
+            roll_keep 5 # Keep at most 5 rolled files
+            roll_keep_days 14 # Delete files older than 14 days
+        }
+	}
+    servers {
+        trusted_proxies cloudflare
+        client_ip_headers Cf-Connecting-Ip X-Forwarded-For
     }
     # email web@boostcreative.com
 }
+
+
+# Do not add an admin URL in coolify settings, instead configure it here
+# https://coolify.example.com {
+#     route {
+#         crowdsec
+#         appsec
+#     }
+#     tls internal
+#     log
+#     handle /app/* {
+#         reverse_proxy coolify-realtime:6001
+#     }
+#     handle /terminal/ws {
+#         reverse_proxy coolify-realtime:6002
+#     }
+#     reverse_proxy coolify:8080
+# }
+
+import /dynamic/*.caddy
