@@ -50,6 +50,7 @@ alias ctop="docker run --rm -ti --volume /var/run/docker.sock:/var/run/docker.so
 
 # Shell integrations
 eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
 
 # Initialize Starship
 eval "$(starship init zsh)"

@@ -34,11 +34,8 @@ services:
   crowdsec:
     image: docker.io/crowdsecurity/crowdsec:latest
     container_name: crowdsec
-    depends_on:
-      - caddy
     environment:
       - GID=1000
-      # - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
       - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors crowdsecurity/wordpress crowdsecurity/appsec-wordpress
       - BOUNCER_KEY_CADDY=${CROWDSEC_API_KEY}
     volumes:
