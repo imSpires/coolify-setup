@@ -181,7 +181,7 @@ mkdir -p "/etc/coolify-setup/proxy"
 mkdir -p /data/coolify/proxy/caddy
 cp "/tmp/cs/proxy/Caddyfile" "/etc/coolify-setup/proxy/Caddyfile"
 cp "/tmp/cs/proxy/acquis.yaml" "/etc/coolify-setup/proxy/acquis.yaml"
-# echo "CROWDSEC_API_KEY=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >"/data/coolify/proxy/caddy/.env"
+echo "CROWDSEC_API_KEY=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >"/data/coolify/proxy/caddy/.env"
 
 # switch proxy to caddy (this doesn't work during setup)
 # docker compose -f /data/coolify/proxy/docker-compose.yml stop

@@ -1,4 +1,8 @@
-Sets up a new server with Coolify, decent security, and a few other things.
+> Note: Don't use this yet, I still need to set up a repo for the custom Caddy image.
+
+Script to set up a new server with Coolify and some other things.
+
+CrowdSec is included and should work out of the box with any service. It also supports Cloudflare proxying.
 
 ```bash
 apt update && apt install git unzip -y && git clone https://github.com/BOOST-Creative/coolify-setup.git --depth 1 /tmp/cs && /tmp/cs/setup.sh
@@ -11,13 +15,83 @@ apt update && apt install git unzip -y && git clone https://github.com/BOOST-Cre
 
 ## Coolify setup
 
-Create your account, then go to Servers > localhost > Configuration and change the port to your chosen port. This is a bit finicky. If the SSH settings show errors, try restarting the server. You may need to add the Coolify public key to `/root/.ssh/authorized_keys`. Or try `sudo systemctl restart docker`.
+Create your account, then go to Servers > localhost > Configuration and change the port to your chosen SSH port.
 
-In the Proxy tab, stop the proxy and switch to use Caddy. You may need to reboot the server to get it to stick.
+In the Proxy tab, stop the proxy and switch to use Caddy. You may need to `sudo systemctl restart docker` to get it to stick.
 
-Then go to Settings > General and change the instance domain if you need to access it from outside the server.
+After the proxy is switched to Caddy, replace the entire proxy configuration with the content of [proxy/docker-compose.yml](proxy/docker-compose.yml).
 
-## Firewall
+Finally, click `Dynamic Configurations` and add the following to access Coolify from outside the server:
+
+**coolify.caddy**
+
+```
+https://coolify.example.com {
+    import crowdsec
+    tls internal
+    handle /app/* {
+        reverse_proxy coolify-realtime:6001
+    }
+    handle /terminal/ws {
+        reverse_proxy coolify-realtime:6002
+    }
+    reverse_proxy coolify:8080
+}
+```
+
+Please do not change the admin URL directly on the Coolify Settings page.
+
+## CrowdSec
+
+CrowdSec is configured with [a Caddy bouncer](https://github.com/hslatman/caddy-crowdsec-bouncer) to block malicious traffic at the proxy level.
+
+It processes logs directly from Caddy, so should work with any service as long as it includes the proper label:
+
+```yaml
+labels:
+  - caddy_0.0_import=crowdsec
+```
+
+### CrowdSec CLI
+
+You can use the `cscli` command to manage the crowdsec instance. Prefix with `docker exec crowdsec` to run it in the crowdsec container.
+
+https://docs.crowdsec.net/docs/cscli/
+
+#### Example commands
+
+**Metrics**
+
+```bash
+docker exec crowdsec cscli metrics
+```
+
+**Ban / Unban IP**
+
+```bash
+# ban ip
+docker exec crowdsec cscli decisions add --ip 1.2.3.4
+# delete ban
+docker exec crowdsec cscli decisions delete --ip 1.2.3.4
+# ban range
+docker exec crowdsec cscli decisions add --range 1.2.3.0/24
+# customize length of ban (default is 4h)
+docker exec crowdsec cscli decisions add --ip 1.2.3.4 --duration 1w
+```
+
+**List bans**
+
+```bash
+docker exec crowdsec cscli decisions list
+```
+
+#### Manually adding a ban
+
+```bash
+docker exec crowdsec cscli decisions add --ip <ip>
+```
+
+## Firewall (UFW)
 
 This setup uses UFW with [ufw-docker](https://github.com/chaifeng/ufw-docker).
 
@@ -26,23 +100,23 @@ The firewall is configured to allow HTTP (port 80), HTTPS (port 443), and SSH (y
 If you need to allow ingress on other ports, do this:
 
 ```bash
-sudo ufw allow <port>
-sudo ufw route allow proto tcp from any to any port <port>
+PORT=45876 && sudo ufw allow $PORT && sudo ufw route allow proto tcp from any to any port $PORT
 ```
 
 If you need to block an IP range, do this, but be careful not to block Cloudflare IPs:
 
 ```bash
-ufw prepend deny from 45.135.232.0/24
-ufw route prepend deny from 45.135.232.0/24
+IP_RANGE="45.135.232.0/24" && sudo ufw prepend deny from $IP_RANGE && sudo ufw route prepend deny from $IP_RANGE
+```
+
+After making changes to UFW rules, you need to save them to persist across reboots:
+
+```bash
+sudo ufw save
 ```
 
 ## TLS
 
 We're using the Caddy proxy for Coolify because it's a little easier to run services with self-signed certs (`caddy_0.tls=internal`) and set up redirects. Generally we want to use a self-signed cert and strict SSL through Cloudflare so we don't need to worry about expiring certs.
 
-If a service is not proxied through Cloudflare, removing `caddy_0.tls=internal` will generate a letsencrypt cert.
-
-## TODO
-
-- It would be nice to have a global WAF. We'd need to integrate it with caddy-docker-proxy, which Coolify uses, and make sure it uses the correct headers for Cloudflare.
+If a service is not proxied through Cloudflare, removing `caddy_0.tls=internal` and restarting the service will generate a cert.

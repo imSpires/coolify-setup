@@ -6,12 +6,12 @@ set -e
 
 SSH_PORT=REPLACE_ME
 
-read -p "$(echo -e "\e[32mWelcome! The last thing we need to do is set up and save firewall rules. Do you want to do this now (y/n)?\e[0m ")" yn
+# read -p "$(echo -e "\e[32mWelcome! The last thing we need to do is set up and save firewall rules. Do you want to do this now (y/n)?\e[0m ")" yn
 
-if [[ ! $yn =~ ^[Yy]$ ]]; then
-  echo "Goodbye. This script will run again next time you log in."
-  exit
-fi
+# if [[ ! $yn =~ ^[Yy]$ ]]; then
+#   echo "Goodbye. This script will run again next time you log in."
+#   exit
+# fi
 
 # Install UFW if not already installed
 # sudo apt update
@@ -46,7 +46,7 @@ sudo ufw enable
 sudo wget -O /usr/local/bin/ufw-docker \
   https://github.com/chaifeng/ufw-docker/raw/master/ufw-docker
 sudo chmod +x /usr/local/bin/ufw-docker
-sudo ufw-docker install
+sudo ufw-docker install -y
 sudo ufw route allow proto tcp from any to any port 80
 sudo ufw route allow proto tcp from any to any port 443
 sudo ufw route allow proto tcp from any to any port "$SSH_PORT"
