@@ -120,3 +120,8 @@ sudo ufw save
 We're using the Caddy proxy for Coolify because it's a little easier to run services with self-signed certs (`caddy_0.tls=internal`) and set up redirects. Generally we want to use a self-signed cert and strict SSL through Cloudflare so we don't need to worry about expiring certs.
 
 If a service is not proxied through Cloudflare, removing `caddy_0.tls=internal` and restarting the service will generate a cert.
+
+## TODO
+
+- [ ] Set up a repo for the custom Caddy image.
+- [ ] IP whitelist.
