@@ -58,7 +58,7 @@ labels:
 
 You can use the `cscli` command to manage the crowdsec instance. Prefix with `docker exec crowdsec` to run it in the crowdsec container.
 
-https://docs.crowdsec.net/docs/cscli/
+<https://docs.crowdsec.net/docs/cscli/>
 
 #### Example commands
 
@@ -126,4 +126,5 @@ If a service is not proxied through Cloudflare, removing `caddy_0.tls=internal` 
 ## TODO
 
 - [ ] Set up a repo for the custom Caddy image.
+- [ ] Disable docker userland proxy.
 - [ ] IP whitelist.
