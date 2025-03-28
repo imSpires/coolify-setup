@@ -13,7 +13,9 @@ apt update && apt install git unzip -y && git clone https://github.com/BOOST-Cre
 - You should only use ed25519 keys to connect to the server via SSH.
 - The server runs Watchtower to keep containers up to date, so it's a good idea to use version tags to keep things from breaking.
 
-## Coolify setup
+## Initial Coolify setup
+
+After running the script and logging back in via SSH, you can access the Coolify web interface at [http://localhost:8000](http://localhost:8000).
 
 Create your account, then go to Servers > localhost > Configuration and change the port to your chosen SSH port.
 
