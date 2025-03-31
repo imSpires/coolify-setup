@@ -52,3 +52,4 @@ jobs:
           context: ./proxy
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.metadata.outputs.tags }}
+          push: ${{ github.ref_type == 'tag' }}
