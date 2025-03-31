@@ -6,7 +6,8 @@ RUN xcaddy build \
   --with github.com/WeidiDeng/caddy-cloudflare-ip \
   --with github.com/caddyserver/transform-encoder \
   --with github.com/hslatman/caddy-crowdsec-bouncer/http \
-  --with github.com/fvbommel/caddy-combine-ip-ranges
+  --with github.com/fvbommel/caddy-combine-ip-ranges \
+  --with github.com/mholt/caddy-ratelimit
 # --with github.com/hslatman/caddy-crowdsec-bouncer/appsec
 # --with github.com/hslatman/caddy-crowdsec-bouncer/layer4
 

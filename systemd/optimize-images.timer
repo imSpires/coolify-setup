@@ -1,5 +1,5 @@
 [Unit]
-Description=Run Optimize Images Every Night at 11:30 PM
+Description=Optimize Images Every Night at 12:30 AM
 
 [Timer]
 OnCalendar=*-*-* 00:30:00

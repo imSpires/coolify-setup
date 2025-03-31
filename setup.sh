@@ -130,16 +130,18 @@ usermod -aG docker "$username"
 htpasswd -bc /root/kopiap.txt kopia "$KOPIA_PASSWORD" >/dev/null 2>&1
 
 # set up automated jobs with systemd
+sed -i "s/USERNAME/$username/" /tmp/cs/systemd/*.service
 cp /tmp/cs/systemd/* /etc/systemd/system
-sed -i "s/USERNAME/$username/" /etc/systemd/system/kopiaServer.service
 
 systemctl daemon-reload
-# systemd timer to optimize images every day at 12:30am
-systemctl start optimize_images.timer
-systemctl enable optimize_images.timer >/dev/null 2>&1
-# kopia server
-systemctl start kopiaServer.service
-systemctl enable kopiaServer.service >/dev/null 2>&1
+# Enable and start specific timers
+systemctl start optimize-images.timer
+systemctl enable optimize-images.timer >/dev/null 2>&1
+systemctl start crowdsec-prune.timer
+systemctl enable crowdsec-prune.timer >/dev/null 2>&1
+# Enable and start all direct services (not triggered by timers)
+systemctl start kopia-server.service
+systemctl enable kopia-server.service >/dev/null 2>&1
 
 # update SSH config
 echo -e "\n${CYAN}Updating SSH config...${ENDCOLOR}"

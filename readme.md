@@ -1,12 +1,14 @@
 > Note: Don't use this yet, I still need to set up a repo for the custom Caddy image.
 
-Script to set up a new server with Coolify and some other things.
-
-CrowdSec is included and should work out of the box with any service. It also supports Cloudflare proxying.
+Script to set up a new server with Coolify, CrowdSec, rate limiting, and some other things.
 
 ```bash
 apt update && apt install git unzip -y && git clone https://github.com/BOOST-Creative/coolify-setup.git --depth 1 /tmp/cs && /tmp/cs/setup.sh
 ```
+
+CrowdSec is included and should work out of the box with any service. It also supports Cloudflare proxying.
+
+Rate limiting can be configured in [proxy/docker-compose.yml](proxy/docker-compose.yml). There is an existing snippet for rate limiting on WordPress websites. (You would use `- caddy_0.1_import=wordpress_rate_limit` in the labels section of the service.)
 
 **Notes:**
 
@@ -25,11 +27,23 @@ After the proxy is switched to Caddy, replace the entire proxy configuration wit
 
 Finally, click `Dynamic Configurations` and add the following to access Coolify from outside the server:
 
-**coolify.caddy**
+**admin.caddy**
 
 ```
 https://coolify.example.com {
     import crowdsec
+    rate_limit {
+        log_key
+        zone login_attempts {
+            match {
+                path /login
+                method POST
+            }
+            key {client_ip}
+            window 1m
+            events 2
+        }
+    }
     tls internal
     handle /app/* {
         reverse_proxy coolify-realtime:6001
@@ -81,7 +95,13 @@ docker exec crowdsec cscli decisions add --range 1.2.3.0/24
 docker exec crowdsec cscli decisions add --ip 1.2.3.4 --duration 1w
 ```
 
-**List bans**
+**List recent alerts**
+
+```bash
+docker exec crowdsec cscli alerts list
+```
+
+**List current bans**
 
 ```bash
 docker exec crowdsec cscli decisions list
