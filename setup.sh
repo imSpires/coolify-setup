@@ -95,7 +95,7 @@ rm Meslo.zip
 # update system - apt update runs in docker script
 apt update
 apt upgrade -y
-apt install kopia unattended-upgrades zsh bat eza ncdu apache2-utils clang ufw -y
+apt install kopia unattended-upgrades zsh bat eza ncdu apache2-utils clang ufw jq -y
 
 # neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
@@ -143,6 +143,8 @@ systemctl enable crowdsec-prune.timer >/dev/null 2>&1
 systemctl start kopia-server.service
 systemctl enable kopia-server.service >/dev/null 2>&1
 
+# disable userland-proxy
+jq '. + { "userland-proxy": false }' /etc/docker/daemon.json >/etc/docker/daemon.json.new && mv /etc/docker/daemon.json.new /etc/docker/daemon.json
 # update SSH config
 echo -e "\n${CYAN}Updating SSH config...${ENDCOLOR}"
 {
@@ -181,7 +183,6 @@ chmod +x "/etc/coolify-setup/mariadb/db-entrypoint.sh"
 # proxy config
 mkdir -p "/etc/coolify-setup/proxy"
 mkdir -p /data/coolify/proxy/caddy
-cp "/tmp/cs/proxy/Caddyfile" "/etc/coolify-setup/proxy/Caddyfile"
 cp "/tmp/cs/proxy/acquis.yaml" "/etc/coolify-setup/proxy/acquis.yaml"
 echo "CROWDSEC_API_KEY=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >"/data/coolify/proxy/caddy/.env"
 
