@@ -2,16 +2,37 @@ services:
   filebrowser:
     image: hurlenko/filebrowser
     container_name: filebrowser
+    restart: unless-stopped
     # set to nobody user for compat w/ wp container
     user: '65534:65534'
     ports:
       - 127.0.0.1:6900:8080
+    networks:
+      - coolify
     volumes:
-      - /home/CHANGE_TO_USERNAME/sites:/data
+      - /home/boost/sites:/data
       - ./filebrowser/config:/config
     environment:
       - FB_BASEURL=/
-    restart: unless-stopped
+    # labels:
+    # caddy: files.example.com
+    # caddy.0_import: crowdsec
+    # # rate_limit
+    # caddy.1_rate_limit:
+    # caddy.1_rate_limit.log_key:
+    # caddy.1_rate_limit.jitter: 5
+    # caddy.1_rate_limit.0_zone: login_attempts
+    # caddy.1_rate_limit.0_zone.0_match.path: /api/login
+    # caddy.1_rate_limit.0_zone.0_match.method: POST
+    # caddy.1_rate_limit.0_zone.key: '{client_ip}'
+    # caddy.1_rate_limit.0_zone.window: 1m
+    # caddy.1_rate_limit.0_zone.events:  2
+    # # ssl
+    # caddy.2_tls: internal
+    # # reverse proxy
+    # caddy.3_reverse_proxy: "{{upstreams 8080}}"
+    # caddy.3_reverse_proxy.0_header_up: X-Real-IP {client_ip}
+    # caddy.3_reverse_proxy.1_header_up: X-Forwarded-For {client_ip}
 
   # kopia server is 6901
 
