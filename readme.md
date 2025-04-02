@@ -5,7 +5,7 @@ CrowdSec is included and should work out of the box with any service. It also su
 Rate limiting can be configured in [proxy/docker-compose.yml](proxy/docker-compose.yml). There is an existing snippet for rate limiting on WordPress websites. (You would use `- caddy_0.1_import=wordpress_rate_limit` in the labels section of the service.)
 
 ```bash
-apt update && apt install git unzip -y && git clone https://github.com/BOOST-Creative/coolify-setup.git --depth 1 /tmp/cs && /tmp/cs/setup.sh
+apt update && apt install gpg git unzip -y && git clone https://github.com/BOOST-Creative/coolify-setup.git --depth 1 /tmp/cs && /tmp/cs/setup.sh
 ```
 
 **Notes:**
@@ -129,11 +129,11 @@ If you need to block an IP range, do this, but be careful not to block Cloudflar
 IP_RANGE="45.135.232.0/24" && sudo ufw prepend deny from $IP_RANGE && sudo ufw route prepend deny from $IP_RANGE
 ```
 
-After making changes to UFW rules, you need to save them to persist across reboots:
+<!-- After making changes to UFW rules, you need to save them to persist across reboots:
 
 ```bash
 sudo ufw save
-```
+``` -->
 
 ## TLS
 

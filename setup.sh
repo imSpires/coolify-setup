@@ -86,16 +86,16 @@ tar -xzf /tmp/fzf.tar.gz -C /usr/bin/
 #   tar xz && mv yq_linux_${ARCHITECTURE} /usr/bin/yq
 #
 
-# meslo nerd font
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Meslo.zip
-mkdir -p /usr/share/fonts/truetype/
-unzip Meslo.zip -d /usr/share/fonts/truetype/
-rm Meslo.zip
+# meslo nerd font (not necessary - users should install their own machine)
+# wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/Meslo.zip
+# mkdir -p /usr/share/fonts/truetype/
+# unzip Meslo.zip -d /usr/share/fonts/truetype/
+# rm Meslo.zip
 
 # update system - apt update runs in docker script
 apt update
 apt upgrade -y
-apt install kopia unattended-upgrades zsh bat eza ncdu apache2-utils clang ufw jq -y
+apt install kopia unattended-upgrades zsh bat eza ncdu apache2-utils clang ufw jq htop -y
 
 # neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
