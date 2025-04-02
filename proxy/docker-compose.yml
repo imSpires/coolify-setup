@@ -9,6 +9,7 @@ services:
       - CADDY_DOCKER_POLLING_INTERVAL=15
       - CADDY_DOCKER_CADDYFILE_PATH=/dynamic/Caddyfile
       - CADDY_DOCKER_EVENT_THROTTLE_INTERVAL=2s
+      - CADDY_INGRESS_NETWORKS=coolify
       - CROWDSEC_API_KEY=${CROWDSEC_API_KEY}
     networks:
       - coolify
