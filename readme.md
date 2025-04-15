@@ -5,7 +5,7 @@ CrowdSec is included and should work out of the box with any service. It also su
 Rate limiting can be configured in [proxy/docker-compose.yml](proxy/docker-compose.yml). There is an existing snippet for rate limiting on WordPress websites. (You would use `- caddy_0.1_import=wordpress_rate_limit` in the labels section of the service.)
 
 ```bash
-apt update && apt install gpg git unzip -y && git clone https://github.com/BOOST-Creative/coolify-setup.git --depth 1 /tmp/cs && /tmp/cs/setup.sh
+apt update && apt install gpg git unzip -y && git clone https://github.com/imSpires/coolify-setup.git --depth 1 /tmp/cs && /tmp/cs/setup.sh
 ```
 
 **Notes:**

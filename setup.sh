@@ -120,9 +120,6 @@ sed -i "s/CHANGE_TO_USERNAME/$username/" "/home/$username/server/docker-compose.
 # sed -i "s|USER_TIMEZONE|$(timedatectl show | grep zone | sed 's/Timezone=//g')|" "/home/$username/server/docker-compose.yml"
 docker compose -f "/home/$username/server/docker-compose.yml" up -d
 
-# fix permissions
-# chown "$username": "/home/$username/sites" "/home/$username/server/docker-compose.yml" "/home/$username/firewall.sh"
-
 # add user to docker users
 usermod -aG docker "$username"
 
@@ -160,13 +157,6 @@ echo -e "\n${CYAN}Updating SSH config...${ENDCOLOR}"
 echo -e "${CYAN}Restarting SSH daemon...${ENDCOLOR}\n"
 systemctl restart sshd
 
-# add boost cli
-mkdir -p "/home/$username/.local/bin"
-wget -O "/home/$username/.local/bin/boost.tar.gz" "https://github.com/BOOST-Creative/boost-server-cli/releases/download/v0.0.5/boost-server-cli_0.0.5_linux_$ARCHITECTURE.tar.gz"
-tar -zxvf "/home/$username/.local/bin/boost.tar.gz" -C "/home/$username/.local/bin" boost
-rm "/home/$username/.local/bin/boost.tar.gz"
-# chown -R "$username:" "/home/$username/.local/bin"
-
 # install zoxide
 sudo -u "$username" curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sudo -u "$username" bash
 ln -s "/home/$username/.local/bin/zoxide" "/usr/local/bin/zoxide"
@@ -174,7 +164,7 @@ ln -s "/home/$username/.local/bin/zoxide" "/usr/local/bin/zoxide"
 # clone wordpress repo and copy config
 mkdir -p "/etc/coolify-setup/mariadb"
 mkdir -p "/etc/coolify-setup/valkey"
-git clone https://github.com/BOOST-Creative/coolify-wordpress-8 "/tmp/wp" --depth=1
+git clone https://github.com/imSpires/coolify-wordpress-8 "/tmp/wp" --depth=1
 cp "/tmp/wp/config/valkey.conf" "/etc/coolify-setup/valkey/valkey.conf"
 cp "/tmp/wp/config/my.cnf" "/etc/coolify-setup/mariadb/my.cnf"
 cp "/tmp/wp/config/db-entrypoint.sh" "/etc/coolify-setup/mariadb/db-entrypoint.sh"
@@ -248,5 +238,3 @@ echo "    ServerAliveInterval 60"
 echo -e "    ServerAliveCountMax 10\n"
 
 reboot
-
-# TODO: maybe disable userland-proxy in /etc/docker/daemon.json

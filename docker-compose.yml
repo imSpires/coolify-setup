@@ -10,7 +10,7 @@ services:
     networks:
       - coolify
     volumes:
-      - /home/boost/sites:/data
+      - /home/1up/sites:/data
       - ./filebrowser/config:/config
     environment:
       - FB_BASEURL=/

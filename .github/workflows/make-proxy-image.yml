@@ -7,7 +7,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: boost-creative/coolify-caddy-proxy
+  IMAGE_NAME: imSpires/coolify-caddy-proxy
 
 jobs:
   build:
