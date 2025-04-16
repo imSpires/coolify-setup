@@ -10,7 +10,7 @@ services:
     networks:
       - coolify
     volumes:
-      - /home/1up/sites:/data
+      - /home/spires/sites:/data
       - ./filebrowser/config:/config
     environment:
       - FB_BASEURL=/
