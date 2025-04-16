@@ -155,7 +155,7 @@ echo -e "\n${CYAN}Updating SSH config...${ENDCOLOR}"
 } >>/etc/ssh/sshd_config
 
 echo -e "${CYAN}Restarting SSH daemon...${ENDCOLOR}\n"
-systemctl restart sshd
+systemctl restart ssh
 
 # install zoxide
 sudo -u "$username" curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sudo -u "$username" bash
