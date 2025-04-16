@@ -3,8 +3,7 @@ services:
     image: hurlenko/filebrowser
     container_name: filebrowser
     restart: unless-stopped
-    # set to nobody user for compat w/ wp container
-    user: '65534:65534'
+    user: '65534:65534' # nobody user for compatibility with WordPress container
     ports:
       - 127.0.0.1:6900:8080
     networks:
@@ -14,27 +13,14 @@ services:
       - ./filebrowser/config:/config
     environment:
       - FB_BASEURL=/
+    # Uncomment and adjust Caddy labels if needed
     # labels:
-    # caddy: files.example.com
-    # caddy.0_import: crowdsec
-    # # rate_limit
-    # caddy.1_rate_limit:
-    # caddy.1_rate_limit.log_key:
-    # caddy.1_rate_limit.jitter: 5
-    # caddy.1_rate_limit.0_zone: login_attempts
-    # caddy.1_rate_limit.0_zone.0_match.path: /api/login
-    # caddy.1_rate_limit.0_zone.0_match.method: POST
-    # caddy.1_rate_limit.0_zone.key: '{client_ip}'
-    # caddy.1_rate_limit.0_zone.window: 1m
-    # caddy.1_rate_limit.0_zone.events:  2
-    # # ssl
-    # caddy.2_tls: internal
-    # # reverse proxy
-    # caddy.3_reverse_proxy: "{{upstreams 8080}}"
-    # caddy.3_reverse_proxy.0_header_up: X-Real-IP {client_ip}
-    # caddy.3_reverse_proxy.1_header_up: X-Forwarded-For {client_ip}
-
-  # kopia server is 6901
+    #   caddy: files.example.com
+    #   caddy.0_import: crowdsec
+    #   caddy.2_tls: internal
+    #   caddy.3_reverse_proxy: "{{upstreams 8080}}"
+    #   caddy.3_reverse_proxy.0_header_up: X-Real-IP {client_ip}
+    #   caddy.3_reverse_proxy.1_header_up: X-Forwarded-For {client_ip}
 
   watchtower:
     image: beatkind/watchtower
@@ -44,14 +30,10 @@ services:
     restart: unless-stopped
     environment:
       - WATCHTOWER_CLEANUP=true
+    networks:
+      - coolify # Add watchtower to the same network for consistency
 
-  # dozzle:
-  #   image: amir20/dozzle
-  #   container_name: dozzle
-  #   networks:
-  #     - CHANGE_TO_USERNAME
-  #   ports:
-  #     - 127.0.0.1:6905:8080
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #   restart: unless-stopped
+# Define the coolify network
+networks:
+  coolify:
+    driver: bridge
