@@ -1,7 +1,7 @@
 services:
   caddy:
     container_name: coolify-proxy
-    image: 'ghcr.io/imSpires/coolify-caddy-proxy:0'
+    image: 'ghcr.io/boost-creative/coolify-caddy-proxy:0'
     restart: unless-stopped
     extra_hosts:
       - 'host.docker.internal:host-gateway'
